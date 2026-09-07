@@ -1,0 +1,33 @@
+{
+  "coverage_decision": "APPROVED",
+  "policy_type": "Commercial Auto Insurance",
+  "policy_number": "COMM-AUTO-001",
+  "applicable_coverage": "Own Vehicle Collision Coverage",
+  "deductible": "$500",
+  "coverage_limit": "$50,000 per incident",
+  "reasoning": "The claim involves damage to the policyholder's own vehicle caused by another driver who has admitted fault, fitting the definition of a collision claim. The matched policy explicitly covers own vehicle collision damages under 'covers_own_vehicle_collision': true and has a collision limit of $50,000 with a $500 deductible. None of the policy's key exclusions\u2014such as racing, personal use outside business, intentional damage, or DUI\u2014apply to this incident. The incident occurred during normal business use, consistent with the commercial policy terms. Therefore, full coverage applies for the collision damage to the vehicle, subject to the deductible and coverage limits.",
+  "exclusions_checked": [
+    "Racing or competitive driving events",
+    "Personal use outside business operations",
+    "Intentional damage",
+    "Damage while driving under the influence"
+  ],
+  "exclusions_triggered": [],
+  "recommendations": "Proceed with a detailed damage assessment and repair estimate. Ensure the claim amount does not exceed the $50,000 limit. Verify claim documents including police report, admitting fault statement, and tow records to support coverage. Adjuster should confirm business use status to ensure compliance with policy terms.",
+  "confidence": "high",
+  "status": "success",
+  "timestamp": "2026-09-07T11:57:05.178322",
+  "claim_summary": {
+    "policy_number": "COMM-AUTO-001",
+    "policy_holder_name": "Samantha Turner",
+    "vehicle_year_make_model": "2017 Honda Civic Hatchback",
+    "vehicle_color": "Blue-Gray",
+    "vehicle_vin": "19XFC2F5XHE200487",
+    "incident_date": "July 18, 2025",
+    "incident_time": "4:10 PM",
+    "incident_location": "2100 Madison Avenue, Albany, NY 12208",
+    "incident_description": "Driving eastbound through green light when another vehicle traveling southbound failed to stop at red signal and struck vehicle on driver's side. Car spun partially before stopping near curb. Other driver admitted fault to police.",
+    "damage_description": "Heavy intrusion and bending on driver's front and rear doors; B-pillar area severely compromised; rear wheel misaligned, not functional for safe driving; shattered rear driver's side window; scraping and paint transfer along both driver's side doors and lower panels; deployment of side airbags; possible interior damage to armrests and door controls; vehicle towed from accident location",
+    "claim_request": "Assessment and full coverage for extensive body and structural repairs"
+  }
+}

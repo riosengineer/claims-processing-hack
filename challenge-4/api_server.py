@@ -9,16 +9,24 @@ import logging
 import asyncio
 import tempfile
 import base64
+import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Body
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 # Import workflow
 from workflow_orchestrator import process_claim_workflow
+
+# Challenge 6 is a sibling directory during local development and is copied
+# into the application root in the container image.
+challenge_6_dir = os.path.join(os.path.dirname(__file__), "..", "challenge-6")
+if os.path.isdir(challenge_6_dir):
+    sys.path.insert(0, challenge_6_dir)
+from validation_workflow import validate_claim_coverage
 
 # Load environment
 load_dotenv(override=True)
@@ -50,7 +58,45 @@ class ClaimProcessResponse(BaseModel):
     error: Optional[str] = None
 
 
+class CoverageValidationResponse(BaseModel):
+    success: bool
+    data: Optional[dict] = None
+    error: Optional[str] = None
+
+
 DEFAULT_CLAIM_FILENAME = "claim_image.jpg"
+
+
+async def _validate_structured_claim(claim_data: dict) -> dict:
+    """Run Challenge 6 validation without blocking the FastAPI event loop."""
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".json") as tmp_file:
+            json.dump(claim_data, tmp_file)
+            tmp_path = tmp_file.name
+
+        return await asyncio.to_thread(
+            lambda: asyncio.run(validate_claim_coverage(tmp_path))
+        )
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
+async def _process_claim_with_coverage(image_path: str) -> dict:
+    """Run image processing, then validate the resulting structured claim."""
+    structured_claim = await process_claim_workflow(image_path)
+    if "error" in structured_claim:
+        return structured_claim
+
+    coverage_result = await _validate_structured_claim(structured_claim)
+    result = dict(structured_claim)
+    result["coverage_validation"] = coverage_result
+
+    if "error" in coverage_result:
+        result["error"] = "Coverage validation failed"
+
+    return result
 
 
 @app.get("/", response_model=HealthResponse)
@@ -115,8 +161,8 @@ async def process_claim_upload(request: Request):
 
         logger.info(f"💾 Saved to temporary file: {tmp_path}")
 
-        # Process with workflow
-        result = await process_claim_workflow(tmp_path)
+        # Process with OCR, structuring, policy matching, and validation.
+        result = await _process_claim_with_coverage(tmp_path)
 
         # Clean up temporary file
         os.unlink(tmp_path)
@@ -167,8 +213,8 @@ async def process_claim_base64(request: ClaimProcessRequest):
         
         logger.info(f"💾 Saved to temporary file: {tmp_path}")
         
-        # Process with workflow
-        result = await process_claim_workflow(tmp_path)
+        # Process with OCR, structuring, policy matching, and validation.
+        result = await _process_claim_with_coverage(tmp_path)
         
         # Clean up temporary file
         os.unlink(tmp_path)
@@ -190,6 +236,25 @@ async def process_claim_base64(request: ClaimProcessRequest):
         
     except Exception as e:
         logger.error(f"❌ Error processing claim: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/validate-coverage", response_model=CoverageValidationResponse)
+async def validate_claim_coverage_endpoint(claim_data: dict = Body(...)):
+    """Validate a structured claim against its matching insurance policy."""
+    try:
+        result = await _validate_structured_claim(claim_data)
+
+        if "error" in result:
+            return CoverageValidationResponse(
+                success=False,
+                error=result.get("error"),
+                data=result,
+            )
+
+        return CoverageValidationResponse(success=True, data=result)
+    except Exception as e:
+        logger.error(f"Error validating claim coverage: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -31,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Default API URL - Container Apps direct URL
-DEFAULT_API_URL = "https://claims-processing-api.orangeforest-dfe25231.swedencentral.azurecontainerapps.io"
+DEFAULT_API_URL = "https://claims-processing-api.gentletree-b8a57f24.swedencentral.azurecontainerapps.io"
 
 
 def get_api_url():
@@ -95,6 +95,45 @@ def display_results(data: dict):
         st.markdown(f"**Date:** {i.get('date', 'N/A')} | **Location:** {i.get('location', 'N/A')}")
         st.markdown(f"**Description:** {i.get('description', 'N/A')}")
 
+    coverage = data.get("coverage_validation")
+    if coverage:
+        st.subheader("🛡️ Coverage Validation")
+
+        policy = coverage.get("policy_match", {})
+        determination = coverage.get("coverage_determination", {})
+        decision = determination.get("decision", "UNKNOWN")
+        policy_name = policy.get("policy_name", "N/A")
+
+        if decision == "APPROVED":
+            st.success(f"Coverage approved — {policy_name}")
+        elif decision == "DENIED":
+            st.error(f"Coverage denied — {policy_name}")
+        elif decision == "PARTIAL_COVERAGE":
+            st.warning(f"Partial coverage — {policy_name}")
+        else:
+            st.info(f"Coverage decision: {decision} — {policy_name}")
+
+        cols = st.columns(3)
+        cols[0].metric("Decision", decision)
+        cols[1].metric("Deductible", determination.get("deductible", "N/A"))
+        cols[2].metric("Coverage Limit", determination.get("coverage_limit", "N/A"))
+
+        applicable = determination.get("applicable_coverage")
+        if applicable:
+            st.markdown(f"**Applicable coverage:** {applicable}")
+
+        reasoning = determination.get("reasoning")
+        if reasoning:
+            st.markdown(f"**Reasoning:** {reasoning}")
+
+        exclusions = determination.get("exclusions_triggered", [])
+        if exclusions:
+            st.markdown("**Exclusions triggered:** " + "; ".join(str(item) for item in exclusions))
+
+        recommendations = determination.get("recommendations")
+        if recommendations:
+            st.markdown(f"**Recommendations:** {recommendations}")
+
 
 def main():
     st.markdown('<p class="main-header">🚗 Insurance Claims Processing</p>', unsafe_allow_html=True)
@@ -129,7 +168,7 @@ def main():
     # Process
     if process_btn and uploaded:
         st.divider()
-        with st.spinner("🔄 Processing... (30-60 seconds)"):
+        with st.spinner("🔄 Processing and validating coverage... (30-60 seconds)"):
             result = process_claim(st.session_state.api_url, uploaded.getvalue(), uploaded.name)
         
         st.header("📋 Results")

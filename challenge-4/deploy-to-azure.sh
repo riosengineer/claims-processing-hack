@@ -5,17 +5,17 @@ set -e
 echo "🚀 Deploying Claims Processing API to Azure Container Apps"
 echo "============================================================"
 
-# Load environment variables
-if [ ! -f ../.env ]; then
+# Resolve paths from the script location so this works when launched from the workspace root.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+WORKSPACE_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Load environment variables without printing their values.
+if [ ! -f "$WORKSPACE_ROOT/.env" ]; then
     echo "❌ Error: .env file not found. Please run Challenge 0 setup first."
     exit 1
 fi
 
-source ../.env
-
-# Save current directory and navigate to workspace root for Docker build
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-WORKSPACE_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+source "$WORKSPACE_ROOT/.env"
 
 # Required variables
 RESOURCE_GROUP="${AZURE_RESOURCE_GROUP}"
@@ -23,7 +23,19 @@ ACR_NAME="${AZURE_CONTAINER_REGISTRY_NAME}"
 ENVIRONMENT_NAME="${CONTAINER_APP_ENVIRONMENT_NAME}"
 APP_NAME="claims-processing-api"
 IMAGE_NAME="claims-processing-api"
-IMAGE_TAG="latest"
+IMAGE_TAG="coverage-$(date -u +%Y%m%d%H%M%S)"
+
+if [ -z "$ENVIRONMENT_NAME" ]; then
+    ENVIRONMENT_NAME=$(az containerapp env list \
+        --resource-group "$RESOURCE_GROUP" \
+        --query '[0].name' \
+        --output tsv)
+fi
+
+if [ -z "$ENVIRONMENT_NAME" ]; then
+    echo "❌ Error: No Container App Environment found in resource group: $RESOURCE_GROUP"
+    exit 1
+fi
 
 echo ""
 echo "📋 Deployment Configuration:"
@@ -67,7 +79,17 @@ if az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP &>/dev
     az containerapp update \
         --name $APP_NAME \
         --resource-group $RESOURCE_GROUP \
-        --image $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG
+        --image $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG \
+        --set-env-vars \
+            AI_FOUNDRY_PROJECT_ENDPOINT="$AI_FOUNDRY_PROJECT_ENDPOINT" \
+            MODEL_DEPLOYMENT_NAME="$MODEL_DEPLOYMENT_NAME" \
+            SEARCH_SERVICE_ENDPOINT="$SEARCH_SERVICE_ENDPOINT" \
+            SEARCH_ADMIN_KEY="$SEARCH_ADMIN_KEY" \
+            SEARCH_INDEX_NAME="${SEARCH_INDEX_NAME:-insurance-documents-index}" \
+            SEARCH_SEMANTIC_CONFIG="${SEARCH_SEMANTIC_CONFIG:-insurance-semantic}" \
+            MISTRAL_DOCUMENT_AI_ENDPOINT="$MISTRAL_DOCUMENT_AI_ENDPOINT" \
+            MISTRAL_DOCUMENT_AI_KEY="$MISTRAL_DOCUMENT_AI_KEY" \
+            MISTRAL_DOCUMENT_AI_DEPLOYMENT_NAME="$MISTRAL_DOCUMENT_AI_DEPLOYMENT_NAME"
 else
     echo "   Creating new app: $APP_NAME"
     az containerapp create \
@@ -85,6 +107,10 @@ else
         --env-vars \
             AI_FOUNDRY_PROJECT_ENDPOINT="$AI_FOUNDRY_PROJECT_ENDPOINT" \
             MODEL_DEPLOYMENT_NAME="$MODEL_DEPLOYMENT_NAME" \
+            SEARCH_SERVICE_ENDPOINT="$SEARCH_SERVICE_ENDPOINT" \
+            SEARCH_ADMIN_KEY="$SEARCH_ADMIN_KEY" \
+            SEARCH_INDEX_NAME="${SEARCH_INDEX_NAME:-insurance-documents-index}" \
+            SEARCH_SEMANTIC_CONFIG="${SEARCH_SEMANTIC_CONFIG:-insurance-semantic}" \
             MISTRAL_DOCUMENT_AI_ENDPOINT="$MISTRAL_DOCUMENT_AI_ENDPOINT" \
             MISTRAL_DOCUMENT_AI_KEY="$MISTRAL_DOCUMENT_AI_KEY" \
             MISTRAL_DOCUMENT_AI_DEPLOYMENT_NAME="$MISTRAL_DOCUMENT_AI_DEPLOYMENT_NAME"

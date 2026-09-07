@@ -54,6 +54,28 @@ KNOWN_POLICIES = {
 }
 
 
+def _find_policy_number(value) -> str:
+    """Find a known policy code at any nesting level in structured claim data."""
+    if isinstance(value, dict):
+        for key, nested_value in value.items():
+            if key == "policy_number" and isinstance(nested_value, str):
+                if nested_value in KNOWN_POLICIES:
+                    return nested_value
+            found = _find_policy_number(nested_value)
+            if found:
+                return found
+    elif isinstance(value, list):
+        for item in value:
+            found = _find_policy_number(item)
+            if found:
+                return found
+    elif isinstance(value, str):
+        for policy_number in KNOWN_POLICIES:
+            if policy_number in value:
+                return policy_number
+    return ""
+
+
 def _collect_documents(results) -> list:
     """Normalize Azure AI Search results into plain dictionaries."""
     return [
@@ -203,23 +225,8 @@ def match_policy(claim_data: dict, project_client=None) -> dict:
         Dictionary with matched policy details and coverage summary
     """
     try:
-        # Extract policy number from claim data
-        policy_number = claim_data.get("policy_number", "")
-        if not policy_number:
-            # Try nested structures
-            for key in ["structured_fields", "extracted_text"]:
-                nested = claim_data.get(key, {})
-                if isinstance(nested, dict):
-                    policy_number = nested.get("policy_number", "")
-                    if not policy_number:
-                        refs = nested.get("reference_numbers", [])
-                        if isinstance(refs, list):
-                            for ref in refs:
-                                if any(code in str(ref) for code in KNOWN_POLICIES):
-                                    policy_number = ref
-                                    break
-                if policy_number:
-                    break
+        # Extract policy number from direct, nested, or OCR-structured fields.
+        policy_number = _find_policy_number(claim_data)
 
         if not policy_number:
             return {

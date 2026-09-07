@@ -1,0 +1,38 @@
+{
+  "coverage_decision": "DENIED",
+  "policy_type": "Liability Only Auto Insurance",
+  "policy_number": "LIAB-AUTO-001",
+  "applicable_coverage": "None",
+  "deductible": "N/A",
+  "coverage_limit": "N/A",
+  "reasoning": "The policy is a liability-only policy which explicitly does not cover any damage to the policyholder's own vehicle. The claim is for collision damage to the insured's own vehicle after being struck by another vehicle while parked. According to the policy's coverage summary and key exclusions, collision damage to the policyholder's own vehicle is excluded. Therefore, this claim is denied due to the exclusion 'Collision damage to your vehicle' and the policy type 'liability_only' not providing coverage for own vehicle collision or comprehensive damage.",
+  "exclusions_checked": [
+    "Collision damage to your vehicle",
+    "Comprehensive damage (theft, vandalism, weather)",
+    "Medical expenses for you or your passengers",
+    "Damage while racing or in competitions",
+    "Intentional damage caused by you",
+    "Damage while using vehicle for business purposes",
+    "Damage while driving under the influence"
+  ],
+  "exclusions_triggered": [
+    "Collision damage to your vehicle"
+  ],
+  "recommendations": "The claimant should consider contacting their own collision or comprehensive insurance provider if available. Alternatively, they may seek recovery from the at-fault party's liability insurance if that party\u2019s insurer covers property damage, as this policy only covers liability toward others. If unsure, the claimant or adjuster should verify if the at-fault party's insurance can compensate for the vehicle damage. Also, advising the policyholder to review coverage limits and options for collision coverage in future policies is recommended.",
+  "confidence": "high",
+  "status": "success",
+  "timestamp": "2026-09-07T11:58:10.121827",
+  "claim_summary": {
+    "policy_number": "LIAB-AUTO-001",
+    "policy_holder_name": "John Peterson",
+    "vehicle_year_make_model": "2004 Honda Accord",
+    "vehicle_color": "Silver",
+    "vehicle_vin": "1HGCM56404A123456",
+    "incident_date": "July 17, 2025",
+    "incident_time": "8:30 AM",
+    "incident_location": "Parking lot, 2325 Main Street, Springfield, OH 45503",
+    "incident_description": "Vehicle legally parked in marked space. Gray pickup truck attempting to park beside struck the front end and driver's side of vehicle causing significant damage. Other driver left information and waited for police.",
+    "damage_description": "Front bumper dislodged and partially detached; severe denting and scraping on driver's side front quarter panel; wheel and tire on driver's side front damaged; paint transfer and deformity on the driver's door; headlamp assembly and grille potentially damaged; possible hidden damage to mechanical components behind the bumper",
+    "claim_request": "Full coverage of repair expenses minus deductible"
+  }
+}

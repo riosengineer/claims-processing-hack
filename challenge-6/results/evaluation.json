@@ -1,0 +1,49 @@
+{
+  "total_claims": 5,
+  "correct": 5,
+  "incorrect": 0,
+  "errors": 0,
+  "details": [
+    {
+      "claim": "crash1",
+      "expected": "DENIED",
+      "actual": "DENIED",
+      "correct": true,
+      "expected_reason": "Liability-only policy does not cover damage to the policyholder's own vehicle. Section 4.1 explicitly excludes: 'Collision damage to your vehicle' and 'Comprehensive damage (theft, vandalism, weather)'. The claimant requests repair coverage for their own 2004 Honda Accord, which is not covered.",
+      "actual_reason": "The policy is a liability-only auto insurance which explicitly does NOT cover damage to the policyholder's own vehicle (see key exclusion 'Collision damage to your vehicle'). The claim describes significant collision damage to the policyholder's own vehicle caused by another driver. This type of claim is outside the scope of coverage since the policy only covers liability for bodily injury and property damage to others, not the insured's own vehicle."
+    },
+    {
+      "claim": "crash2",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "correct": true,
+      "expected_reason": "Commercial Auto policy includes Physical Damage Coverage with both Collision and Comprehensive coverage. The claim involves a collision during normal driving (eastbound through green light), which falls under 'Damage from vehicle collisions during business use'. No exclusions apply.",
+      "actual_reason": "The incident involves collision damage to the insured's own 2017 Honda Civic Hatchback caused by another driver. The policy explicitly covers own vehicle collision damage with a $50,000 limit and a $500 deductible, as stated in the 'covers_own_vehicle_collision' section. There are no indications of any exclusions triggered such as racing, DUI, or intentional damage. The other driver admitted fault, supporting coverage under collision. The extensive body and structural damage described is consistent with collision coverage. Therefore, the claim is approved under the collision coverage section."
+    },
+    {
+      "claim": "crash3",
+      "expected": "DENIED",
+      "actual": "DENIED",
+      "correct": true,
+      "expected_reason": "Same as crash1 \u2014 liability-only policy does not cover the policyholder's own vehicle damage. The claimant requests 'full assessment and repair of all damage' to their own 2012 Suzuki SX4. Section 4.1 explicitly excludes collision and comprehensive damage to the insured vehicle.",
+      "actual_reason": "The claim is for damage to the policyholder's own vehicle involving collision impacts to the rear quarter panel, front bumper, and suspension. The insurance policy is a Liability Only Auto Insurance (policy number LIAB-AUTO-001) which explicitly does NOT cover damage to the policyholder's own vehicle (as stated under 'key_exclusions' and 'own_vehicle_damage_covered': false). The coverage summary confirms that it does not cover own vehicle collision damage or comprehensive damage. Since the policy only covers liability claims (damage/injury caused to others), and this claim is for own vehicle damage, it is denied based on the exclusion 'Collision damage to your vehicle.'"
+    },
+    {
+      "claim": "crash4",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "correct": true,
+      "expected_reason": "Commercial Auto policy covers collision damage for business vehicles. The claim involves a rear-end collision while driving on business roads. Falls under 'Damage from vehicle collisions during business use'. Towing reimbursement is also available. No exclusions apply.",
+      "actual_reason": "The claim arises from a rear-end collision involving the policyholder's own vehicle, which is covered under the policy's collision coverage as confirmed by 'covers_own_vehicle_collision': true and 'own_vehicle_damage_covered': true. The described damages (structural rear-end damage, possible suspension issues) fit the collision damages covered. The policy also includes towing coverage, supporting reimbursement for towing costs. No exclusions are triggered as the incident was not related to racing, DUI, or intentional damage, and the vehicle was used in a commercial context given the commercial auto policy type. Therefore, this claim is approved subject to the $500 collision deductible and within the $50,000 collision limit."
+    },
+    {
+      "claim": "crash5",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "correct": true,
+      "expected_reason": "Commercial Auto policy covers collision damage. The claim involves an intersection collision with a pickup truck. Falls under 'Damage from vehicle collisions during business use'. No exclusions apply. Towing reimbursement included in claim request.",
+      "actual_reason": "The claim involves collision damage to the policyholder's own vehicle due to another driver's failure to yield, which is covered under the policy's collision coverage for own vehicle damage. The policy explicitly covers collision damage and towing costs. The incident does not involve any exclusions such as racing, DUI, or intentional damage. The damage described fits within the collision coverage parameters, and the claim request for towing reimbursement is supported by the policy's towing coverage. No exclusions apply, and the collision limit of $50,000 per incident is deemed adequate given the described damages."
+    }
+  ],
+  "accuracy": 1.0
+}

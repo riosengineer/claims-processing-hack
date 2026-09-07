@@ -30,7 +30,7 @@ fi
 
 # Get resource group deployments, find deployments starting with 'Microsoft.Template' and sort them by timestamp
 echo "Getting the deployments in '$resourceGroupName'..."
-deploymentName=$(az deployment group list --resource-group $resourceGroupName --query "[?contains(name, 'Microsoft.Template') || contains(name, 'CustomDeployment')].{name:name}[0].name" --output tsv)
+deploymentName=$(az deployment group list --resource-group $resourceGroupName --query "reverse(sort_by([?properties.provisioningState == 'Succeeded' && (name == 'challenge-0-deployment' || contains(name, 'Microsoft.Template') || contains(name, 'CustomDeployment'))], &properties.timestamp))[0].name" --output tsv)
 if [ $? -ne 0 ]; then
     echo "Error occurred while fetching deployments. Exiting..."
     exit 1
@@ -89,6 +89,10 @@ if [ -z "$storageAccountName" ] || [ -z "$logAnalyticsWorkspaceName" ] || [ -z "
     
     if [ -z "$aiFoundryHubName" ]; then
         aiFoundryHubName=$(az cognitiveservices account list --resource-group $resourceGroupName --query "[?kind=='AIServices'].name | [0]" -o tsv 2>/dev/null || echo "")
+    fi
+
+    if [ -z "$aiFoundryProjectName" ] && [ -n "$aiFoundryHubName" ]; then
+        aiFoundryProjectName=$(az resource list --resource-group $resourceGroupName --resource-type "Microsoft.CognitiveServices/accounts/projects" --query "[0].name" -o tsv 2>/dev/null || echo "")
     fi
     
     if [ -z "$keyVaultName" ]; then

@@ -1,0 +1,104 @@
+{
+  "claim_file": "crash1_structured.json",
+  "policy_match": {
+    "policy_number": "LIAB-AUTO-001",
+    "policy_name": "Liability Only Auto Insurance",
+    "policy_type": "liability_only",
+    "match_confidence": "high"
+  },
+  "coverage_determination": {
+    "decision": "DENIED",
+    "applicable_coverage": "None",
+    "deductible": "N/A",
+    "coverage_limit": "N/A",
+    "reasoning": "The policy 'Liability Only Auto Insurance' explicitly does not cover collision damage to the policyholder's own vehicle, as stated under 'Collision damage to your vehicle' exclusion and 'own_vehicle_damage_covered': false. The claim describes significant physical damage to the insured's own vehicle caused by another driver. Since the insured's policy only covers liability towards others and not damages to their own vehicle, this claim is not covered under this policy.",
+    "exclusions_triggered": [
+      "Collision damage to your vehicle"
+    ],
+    "recommendations": "Advise the claimant to review any additional policies they may hold that include collision or comprehensive coverage. They may also consider filing a claim with the at-fault driver's liability insurance. Since this policy does not cover their own vehicle damage, seeking alternative coverage sources or legal recourse might be necessary."
+  },
+  "full_policy_result": {
+    "policy_match": {
+      "policy_number": "LIAB-AUTO-001",
+      "policy_name": "Liability Only Auto Insurance",
+      "policy_type": "liability_only",
+      "match_confidence": "high"
+    },
+    "coverage_summary": {
+      "covers_own_vehicle_collision": false,
+      "covers_own_vehicle_comprehensive": false,
+      "covers_liability_bodily_injury": true,
+      "covers_liability_property_damage": true,
+      "covers_medical_payments": false,
+      "covers_uninsured_motorist": false,
+      "covers_rental_car": false,
+      "covers_roadside_assistance": false,
+      "covers_towing": false
+    },
+    "limits": {
+      "collision_limit": "N/A",
+      "comprehensive_limit": "N/A",
+      "bodily_injury_per_person": "$25,000",
+      "bodily_injury_per_accident": "$50,000",
+      "property_damage_per_accident": "$25,000",
+      "medical_payments_per_person": "N/A"
+    },
+    "deductibles": {
+      "collision_deductible": "N/A",
+      "comprehensive_deductible": "N/A"
+    },
+    "key_exclusions": [
+      "Collision damage to your vehicle",
+      "Comprehensive damage (theft, vandalism, weather)",
+      "Medical expenses for you or your passengers",
+      "Damage while racing or in competitions",
+      "Intentional damage caused by you",
+      "Damage while using vehicle for business purposes",
+      "Damage while driving under the influence"
+    ],
+    "own_vehicle_damage_covered": false,
+    "notes": "Liability-only policy: covers only damage/injury you cause to OTHERS. Does NOT cover any damage to the policyholder's own vehicle.",
+    "status": "success",
+    "source": "fallback_mapping",
+    "timestamp": "2026-09-07T11:58:46.206537"
+  },
+  "full_validation_result": {
+    "coverage_decision": "DENIED",
+    "policy_type": "Liability Only Auto Insurance",
+    "policy_number": "LIAB-AUTO-001",
+    "applicable_coverage": "None",
+    "deductible": "N/A",
+    "coverage_limit": "N/A",
+    "reasoning": "The policy 'Liability Only Auto Insurance' explicitly does not cover collision damage to the policyholder's own vehicle, as stated under 'Collision damage to your vehicle' exclusion and 'own_vehicle_damage_covered': false. The claim describes significant physical damage to the insured's own vehicle caused by another driver. Since the insured's policy only covers liability towards others and not damages to their own vehicle, this claim is not covered under this policy.",
+    "exclusions_checked": [
+      "Collision damage to your vehicle",
+      "Comprehensive damage (theft, vandalism, weather)",
+      "Medical expenses for you or your passengers",
+      "Damage while racing or in competitions",
+      "Intentional damage caused by you",
+      "Damage while using vehicle for business purposes",
+      "Damage while driving under the influence"
+    ],
+    "exclusions_triggered": [
+      "Collision damage to your vehicle"
+    ],
+    "recommendations": "Advise the claimant to review any additional policies they may hold that include collision or comprehensive coverage. They may also consider filing a claim with the at-fault driver's liability insurance. Since this policy does not cover their own vehicle damage, seeking alternative coverage sources or legal recourse might be necessary.",
+    "confidence": "high",
+    "status": "success",
+    "timestamp": "2026-09-07T11:58:53.541287",
+    "claim_summary": {
+      "policy_number": "LIAB-AUTO-001",
+      "policy_holder_name": "John Peterson",
+      "vehicle_year_make_model": "2004 Honda Accord",
+      "vehicle_color": "Silver",
+      "vehicle_vin": "1HGCM56404A123456",
+      "incident_date": "July 17, 2025",
+      "incident_time": "8:30 AM",
+      "incident_location": "Parking lot, 2325 Main Street, Springfield, OH 45503",
+      "incident_description": "Vehicle legally parked in marked space. Gray pickup truck attempting to park beside struck the front end and driver's side of vehicle causing significant damage. Other driver left information and waited for police.",
+      "damage_description": "Front bumper dislodged and partially detached; severe denting and scraping on driver's side front quarter panel; wheel and tire on driver's side front damaged; paint transfer and deformity on the driver's door; headlamp assembly and grille potentially damaged; possible hidden damage to mechanical components behind the bumper",
+      "claim_request": "Full coverage of repair expenses minus deductible"
+    }
+  },
+  "workflow_timestamp": "2026-09-07T11:58:53.541964"
+}
